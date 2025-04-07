@@ -1,0 +1,61 @@
+/* DiemDanhSV-master/src/pages/teacher/TeacherDashboard.css */
+
+.teacherDashboardContainer {
+  /* Có thể thêm background nhẹ nhàng cho toàn trang nếu MainLayout chưa có */
+  /* background-color: #f9f9f9; */
+  padding-top: 2rem; /* Thêm khoảng cách trên */
+  padding-bottom: 2rem; /* Thêm khoảng cách dưới */
+}
+
+.teacherDashboardPaper {
+  padding: 1.5rem 2rem; /* Padding đồng đều hơn */
+  border-radius: 12px; /* Bo góc mềm mại */
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Bóng đổ nhẹ nhàng */
+}
+
+.dashboardTitle {
+  margin-bottom: 1.5rem; /* Khoảng cách dưới tiêu đề */
+  font-weight: 600;
+  color: #1a237e; /* Màu xanh đậm hơn */
+}
+
+.tabsContainer {
+  margin-bottom: 1.5rem;
+}
+
+/* Tùy chỉnh Tabs của MUI */
+.teacherDashboardTabs .MuiTabs-indicator {
+  background-color: #1a237e; /* Màu indicator khớp với tiêu đề */
+  height: 3px;
+}
+
+/* Tùy chỉnh Tab của MUI */
+.teacherDashboardTab {
+  text-transform: none; /* Không viết hoa chữ cái đầu */
+  font-weight: 500;
+  font-size: 1rem;
+  opacity: 0.7;
+  transition: all 0.2s ease-in-out;
+}
+
+.teacherDashboardTab.Mui-selected {
+  color: #1a237e !important; /* Màu chữ khi chọn tab */
+  opacity: 1;
+  font-weight: 600;
+}
+
+.teacherDashboardTab:hover {
+  background-color: rgba(26, 35, 126, 0.04); /* Hiệu ứng hover nhẹ */
+  opacity: 1;
+}
+
+.dashboardDivider {
+  margin-bottom: 1.5rem; /* Khoảng cách dưới đường kẻ */
+  border-color: rgba(0, 0, 0, 0.08); /* Màu đường kẻ nhạt hơn */
+}
+
+.tabContent {
+  /* Thêm style cho nội dung tab nếu cần */
+  min-height: 300px; /* Chiều cao tối thiểu để tránh nhảy trang */
+}

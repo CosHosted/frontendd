@@ -1,0 +1,56 @@
+/* DiemDanhSV-master/src/pages/admin/AdminDashboard.css */
+
+.adminDashboardContainer {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.adminDashboardPaper {
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dashboardTitleAdmin { /* Đổi tên class để tránh trùng */
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: #d32f2f; /* Màu đỏ làm màu chính cho admin */
+}
+
+.tabsContainerAdmin { /* Đổi tên class */
+  margin-bottom: 1.5rem;
+}
+
+.adminDashboardTabs .MuiTabs-indicator {
+  background-color: #d32f2f; /* Màu indicator đỏ */
+  height: 3px;
+}
+
+.adminDashboardTab { /* Giữ tên class chung nếu muốn style giống teacher */
+  text-transform: none;
+  font-weight: 500;
+  font-size: 1rem;
+  opacity: 0.7;
+  transition: all 0.2s ease-in-out;
+}
+
+.adminDashboardTab.Mui-selected {
+  color: #d32f2f !important; /* Màu chữ đỏ khi chọn */
+  opacity: 1;
+  font-weight: 600;
+}
+
+.adminDashboardTab:hover {
+  background-color: rgba(211, 47, 47, 0.04); /* Hiệu ứng hover đỏ nhạt */
+  opacity: 1;
+}
+
+.dashboardDividerAdmin { /* Đổi tên class */
+  margin-bottom: 1.5rem;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.tabContentAdmin { /* Đổi tên class */
+  min-height: 300px;
+}

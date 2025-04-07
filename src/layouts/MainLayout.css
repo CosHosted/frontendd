@@ -1,0 +1,87 @@
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-bar {
+  background-color: #1976d2 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.logo-icon {
+  margin-right: 0.5rem;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  margin-right: 1rem;
+  text-align: right;
+}
+
+.user-name {
+  color: white;
+  font-weight: 500;
+}
+
+.user-role {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+}
+
+.menu-button {
+  color: white !important;
+}
+
+.menu-paper {
+  margin-top: 0.5rem;
+  min-width: 200px;
+}
+
+.menu-item {
+  padding: 0.75rem 1rem;
+}
+
+.menu-item-icon {
+  margin-right: 0.5rem;
+  color: #666;
+}
+
+.main-content {
+  flex: 1;
+  background-color: #f5f5f5;
+}
+
+@media (max-width: 600px) {
+  .toolbar {
+    padding: 0 0.5rem;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .user-info {
+    display: none;
+  }
+} 

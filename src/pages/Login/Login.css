@@ -1,0 +1,163 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  padding: 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-title {
+  color: #1976d2;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  color: #666;
+  font-size: 1rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #333;
+  font-weight: 500;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.login-button {
+  margin-top: 1rem;
+  height: 48px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.loading-button {
+  position: relative;
+}
+
+.loading-button .MuiCircularProgress-root {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -12px;
+  margin-left: -12px;
+}
+
+@media (max-width: 600px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* DiemDanhSV-master/src/pages/Login/Login.css */
+
+/* Container chính (thay thế sx của Box ngoài cùng) */
+.loginPageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  /* Gradient background */
+  background: linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%);
+  /* Padding mặc định */
+  padding: 16px; /* tương đương p: 2 */
+}
+
+/* Khung đăng nhập (thay thế sx của Paper) */
+.loginPaper {
+  /* Padding responsive (mặc định cho xs, ghi đè cho sm trở lên) */
+  padding: 24px; /* tương đương p: { xs: 3 } */
+  width: 100%;
+  max-width: 420px;
+  border-radius: 10px; /* giữ nguyên bo góc */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Thêm box-shadow nếu cần (elevation={4} tương đương bóng khá rõ) */
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 
+              0px 4px 5px 0px rgba(0,0,0,0.14), 
+              0px 1px 10px 0px rgba(0,0,0,0.12);
+  background-color: #fff; /* Đảm bảo có nền trắng */
+}
+
+/* Responsive padding cho Paper */
+@media (min-width: 600px) { /* breakpoint 'sm' của MUI */
+  .loginPaper {
+    padding: 32px; /* tương đương p: { sm: 4 } */
+  }
+}
+
+/* Tiêu đề (thay thế sx của Typography) */
+.loginTitle {
+  margin-bottom: 24px; /* tương đương mb: 3 */
+  font-weight: 600;
+  color: #37474f; /* giữ nguyên màu */
+  font-family: 'Montserrat', sans-serif; /* Đảm bảo font */
+  font-size: 2.125rem; /* tương đương variant="h4" */
+  line-height: 1.235;
+  text-align: center; /* Thêm để chắc chắn căn giữa */
+}
+
+/* Form (thay thế sx của Box component="form") */
+.loginFormBox {
+  width: 100%;
+  margin-top: 8px; /* tương đương mt: 1 */
+}
+
+/* Nút Login (thay thế sx của Button) */
+.loginButtonMui {
+  margin-top: 24px; /* tương đương mt: 3 */
+  margin-bottom: 16px; /* tương đương mb: 2 */
+  padding-top: 9.6px; /* ~ py: 1.2 */
+  padding-bottom: 9.6px; /* ~ py: 1.2 */
+  font-size: 1rem; /* giữ nguyên font-size */
+  font-weight: 600; /* Thêm từ sx cũ */
+}
+
+/* Style cho Alert lỗi (nếu cần tùy chỉnh thêm) */
+.loginAlert {
+  width: 100%;
+  margin-bottom: 16px; /* tương đương mb: 2 */
+}
+
+/* CSS không thể trực tiếp style InputAdornment hoặc icon bên trong InputProps một cách dễ dàng, 
+   nên các style liên quan đến icon và vị trí của chúng thường được giữ lại trong sx hoặc InputProps. */ 
