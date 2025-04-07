@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://diemdanhserver.vercel.app/api';
+const API_URL = 'https://backenddd-one.vercel.app/api';
 
 const api = axios.create({
   baseURL: API_URL,

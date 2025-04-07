@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../config/config';
 
 const api = axios.create({
-  baseURL: 'https://diemdanhserver.vercel.app/api',
+  baseURL: 'https://backenddd-one.vercel.app/api',
   headers: {
     'Content-Type': 'application/json',
   },

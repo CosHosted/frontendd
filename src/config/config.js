@@ -1,6 +1,6 @@
 const config = {
-  API_URL: 'https://diemdanhserver.vercel.app/api',
-  REFRESH_TOKEN_URL: 'http://localhost:5000/api/auth/refresh-token'
+  API_URL: 'https://backenddd-one.vercel.app/api',
+  REFRESH_TOKEN_URL: 'https://backenddd-one.vercel.app/api/auth/refresh-token'
 };
 //Neu dung bien env
 // const config = {
