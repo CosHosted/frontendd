@@ -52,13 +52,14 @@ const Login = () => {
         // Lấy thông tin user từ localStorage sau khi đăng nhập
         const userRole = localStorage.getItem('userRole');
         
-        // Sử dụng navigate thay vì window.location để tránh lỗi 404
+        // Sử dụng window.location.replace để tải lại trang hoàn toàn
+        // Điều này sẽ giúp App.jsx nhận được thông tin đăng nhập mới
         if (userRole === 'admin') {
-          navigate('/admin/dashboard', { replace: true });
+          window.location.replace('/admin/dashboard');
         } else if (userRole === 'teacher') {
-          navigate('/teacher/dashboard', { replace: true });
+          window.location.replace('/teacher');
         } else {
-          navigate('/student/dashboard', { replace: true });
+          window.location.replace('/student/dashboard');
         }
       }
     } catch (error) {
