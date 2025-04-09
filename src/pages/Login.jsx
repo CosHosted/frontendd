@@ -52,13 +52,13 @@ const Login = () => {
         // Lấy thông tin user từ localStorage sau khi đăng nhập
         const userRole = localStorage.getItem('userRole');
         
-        // Chuyển hướng dựa trên role và refresh trang
+        // Sử dụng navigate thay vì window.location để tránh lỗi 404
         if (userRole === 'admin') {
-          window.location.href = '/admin/dashboard';
+          navigate('/admin/dashboard', { replace: true });
         } else if (userRole === 'teacher') {
-          window.location.href = '/teacher/dashboard';
+          navigate('/teacher/dashboard', { replace: true });
         } else {
-          window.location.href = '/student/dashboard';
+          navigate('/student/dashboard', { replace: true });
         }
       }
     } catch (error) {
