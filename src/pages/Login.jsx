@@ -34,9 +34,17 @@ const Login = () => {
   useEffect(() => {
     // Kiểm tra nếu đã đăng nhập thì chuyển hướng
     const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (token && user) {
-      navigate('/dashboard', { replace: true });
+    const userRole = localStorage.getItem('userRole');
+    
+    if (token && userRole) {
+      // Chuyển hướng dựa trên vai trò
+      if (userRole === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (userRole === 'teacher') {
+        navigate('/teacher');
+      } else {
+        navigate('/student/dashboard');
+      }
     }
   }, [navigate]);
 
@@ -52,14 +60,13 @@ const Login = () => {
         // Lấy thông tin user từ localStorage sau khi đăng nhập
         const userRole = localStorage.getItem('userRole');
         
-        // Sử dụng window.location.replace để tải lại trang hoàn toàn
-        // Điều này sẽ giúp App.jsx nhận được thông tin đăng nhập mới
+        // Sử dụng navigate thay vì window.location để tránh tải lại trang
         if (userRole === 'admin') {
-          window.location.replace('/admin/dashboard');
+          navigate('/admin/dashboard');
         } else if (userRole === 'teacher') {
-          window.location.replace('/teacher');
+          navigate('/teacher');
         } else {
-          window.location.replace('/student/dashboard');
+          navigate('/student/dashboard');
         }
       }
     } catch (error) {
