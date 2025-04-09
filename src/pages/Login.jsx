@@ -41,10 +41,9 @@ const Login = () => {
   }, [navigate]);
 
   const handleLogin = async (e) => {
-    console.log("handleLogin called");
     e.preventDefault();
     setError(null);
-    //setLoading(true);
+    setLoading(true);
 
     try {
       const result = await login(username, password, role);
@@ -64,11 +63,9 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      console.log(error);
-      
       setError(error.message || 'Đăng nhập thất bại');
     } finally {
-      //setLoading(false);
+      setLoading(false);
     }
   };
 
