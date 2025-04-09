@@ -2,13 +2,18 @@ import api from "../config/api";
 
 export const login = async (username, password, role) => {
   try {
+    console.log(`Đang đăng nhập với vai trò: ${role}, username: ${username}`);
+    
     const response = await api.post(`/auth/${role}/login`, {
       username,
       password,
     });
+    
+    console.log("Phản hồi từ server:", response.status);
     const { data } = response;
 
     if (!data.token || !data.user) {
+      console.error("Dữ liệu đăng nhập không hợp lệ:", data);
       throw new Error("Dữ liệu đăng nhập không hợp lệ");
     }
 
@@ -17,6 +22,8 @@ export const login = async (username, password, role) => {
     localStorage.setItem("refreshToken", data.refreshToken || "");
     localStorage.setItem("userRole", data.user.role);
     localStorage.setItem("user", JSON.stringify(data.user));
+    
+    console.log("Đăng nhập thành công, đã lưu thông tin người dùng:", data.user.role);
 
     return {
       success: true,
@@ -24,10 +31,14 @@ export const login = async (username, password, role) => {
       token: data.token,
     };
   } catch (error) {
+    console.error("Lỗi trong quá trình đăng nhập:", error);
     localStorage.clear();
+    
     if (error.response) {
-      throw new Error(error.response.data.message || "Đăng nhập thất bại");
+      console.error("Lỗi từ server:", error.response.status, error.response.data);
+      throw new Error(error.response.data.message || error.response.data.error || "Đăng nhập thất bại");
     }
+    
     throw new Error("Không thể kết nối đến server");
   }
 };
