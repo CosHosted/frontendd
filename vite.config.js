@@ -18,6 +18,10 @@ export default defineConfig({
         secure: false,
       },
     },
-    historyApiFallback: true,
+    middlewareMode: false,
+    fs: { strict: false },
+    historyApiFallback: {
+      index: '/index.html'
+    }
   }
 })
