@@ -46,7 +46,7 @@ const TeacherDashboard = () => {
                         <Tab label="Danh sách lớp học" className="teacherDashboardTab" />
                         <Tab label="Tạo lớp mới" className="teacherDashboardTab" />
                         {/* <Tab label="Tạo buổi học" /> Xóa tab này */}
-                        <Tab label="Báo cáo điểm danh" className="teacherDashboardTab" />
+                        
                     </Tabs>
                 </Box>
 
@@ -68,13 +68,7 @@ const TeacherDashboard = () => {
                         <CreateSchedule />
                     )} */}
 
-                    {/* Cập nhật index cho tab Báo cáo điểm danh */}
-                    {currentTab === 2 && (
-                        <Typography variant="body1">
-                            Chức năng xem báo cáo điểm danh sẽ được hiển thị ở đây...
-                        </Typography>
-                        // <AttendanceReport /> 
-                    )}
+                    
                 </Box>
             </Paper>
         </Container>

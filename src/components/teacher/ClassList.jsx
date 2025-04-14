@@ -78,6 +78,9 @@ const ClassList = () => {
     return (
         <Box>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+            <Typography variant="h4" component="h1" className="dashboardTitle">
+                    Bảng điều khiển Giáo viên
+                </Typography>
                 <Typography variant="h5" component="h2">
                     Danh sách lớp học của tôi
                 </Typography>

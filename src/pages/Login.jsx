@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import Badge from '@mui/icons-material/Badge';
 import LockIcon from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -108,7 +108,7 @@ const Login = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <PersonOutlineIcon color="action" />
+                  <Badge color="action" />
                 </InputAdornment>
               ),
             }}

@@ -19,6 +19,7 @@ import {
   Snackbar,
   Input,
   Divider,
+  TablePagination,
 } from "@mui/material";
 
 import { Delete, UploadFile } from "@mui/icons-material";
@@ -48,6 +49,10 @@ const ClassStudents = () => {
   const [selectedBulkFile, setSelectedBulkFile] = useState(null);
   const [isUploadingBulk, setIsUploadingBulk] = useState(false); // Loading cho upload file
   const [bulkUploadError, setBulkUploadError] = useState(null); // Lỗi riêng cho upload
+
+  // State cho phân trang
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500); // Debounce 500ms
 
@@ -252,6 +257,17 @@ const ClassStudents = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  // Hàm xử lý thay đổi trang
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  // Hàm xử lý thay đổi số dòng mỗi trang
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset về trang đầu tiên khi thay đổi số dòng
+  };
+
   if (!classId) {
     return (
       <Box>
@@ -274,7 +290,13 @@ const ClassStudents = () => {
       <Typography variant="h5" component="h2" mb={2}>
         Quản lý sinh viên lớp (ID: {classId})
       </Typography>
-
+      <Button
+        variant="outlined"
+        onClick={() => navigate("/teacher/classes")}
+        sx={{ mt: 3 }}
+      >
+        Quay lại danh sách lớp
+      </Button>
       {error && !bulkUploadError && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
@@ -407,7 +429,9 @@ const ClassStudents = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              students.map((student) => (
+              students
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Phân trang dữ liệu
+                .map((student) => (
                 <TableRow key={student.id}>
                   <TableCell>{student.studentId || "N/A"}</TableCell>
                   <TableCell>{student.name}</TableCell>
@@ -430,13 +454,20 @@ const ClassStudents = () => {
         </Table>
       </TableContainer>
 
-      <Button
-        variant="outlined"
-        onClick={() => navigate("/teacher/classes")}
-        sx={{ mt: 3 }}
-      >
-        Quay lại danh sách lớp
-      </Button>
+      {/* Component phân trang */}
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25, 50]} // Các tùy chọn số dòng/trang
+        component="div"
+        count={students.length} // Tổng số sinh viên
+        rowsPerPage={rowsPerPage} // Số dòng hiện tại/trang
+        page={page} // Trang hiện tại (bắt đầu từ 0)
+        onPageChange={handleChangePage} // Callback khi đổi trang
+        onRowsPerPageChange={handleChangeRowsPerPage} // Callback khi đổi số dòng/trang
+        labelRowsPerPage="Số sinh viên mỗi trang:"
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}-${to} trên ${count !== -1 ? count : `hơn ${to}`}`
+        }
+      />
 
       {/* Snackbar để hiển thị thông báo */}
       <Snackbar
