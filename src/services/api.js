@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../config/config';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',//https://dayladiemdanh-production.up.railway.app/api
+  baseURL: 'https://dayladiemdanh-production.up.railway.app/api',//http://localhost:5000/api
   headers: {
     'Content-Type': 'application/json',
   },
