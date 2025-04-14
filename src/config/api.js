@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use the Railway URL for production, localhost for development
-const API_URL = 'https://dayladiemdanh-production.up.railway.app/api';
+const API_URL = 'http://localhost:5000/api';
 // const API_URL = 'http://localhost:5000/api'; // Uncomment for local development
 
 console.log('API URL being used:', API_URL);
@@ -59,4 +59,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default api; 

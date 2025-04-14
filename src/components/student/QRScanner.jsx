@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Html5QrcodeScanner, Html5QrcodeScannerState } from 'html5-qrcode';
 import { Box, Typography, Button, Alert, Snackbar, CircularProgress } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as attendanceService from '../../services/attendanceService';
 
 const QrScanner = () => {
@@ -10,8 +12,10 @@ const QrScanner = () => {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
     const [lastScanTime, setLastScanTime] = useState(0);
     const [isScanning, setIsScanning] = useState(false);
+    const [checkinSuccess, setCheckinSuccess] = useState(false);
     const scannerInstanceRef = useRef(null);
     const readerId = "html5qr-code-full-region";
+    const navigate = useNavigate();
 
     const onScanSuccess = useCallback(async (decodedText) => {
         const currentTime = Date.now();
@@ -21,6 +25,7 @@ const QrScanner = () => {
         }
         setLastScanTime(currentTime);
         setError(null);
+        setCheckinSuccess(false);
 
         console.log('QR Data scanned:', decodedText);
 
@@ -36,6 +41,7 @@ const QrScanner = () => {
             const response = await attendanceService.checkIn(decodedText);
             console.log('Check-in response:', response);
             setSnackbar({ open: true, message: response.message || 'Điểm danh thành công!', severity: 'success' });
+            setCheckinSuccess(true);
 
             if (scannerInstanceRef.current && typeof scannerInstanceRef.current.clear === 'function'){
                  await scannerInstanceRef.current.clear();
@@ -59,7 +65,7 @@ const QrScanner = () => {
             }
             setTimeout(() => setError(null), 5000);
         }
-    }, [lastScanTime]);
+    }, [lastScanTime, navigate]);
 
     const onScanFailure = useCallback((scanError) => {
         if (!scanError?.toLowerCase().includes("qr code not found")) {
@@ -73,6 +79,7 @@ const QrScanner = () => {
         if (isScanning) {
             console.log("Starting scanner...");
             setError(null);
+            setCheckinSuccess(false);
 
             try {
                 scannerInstance = new Html5QrcodeScanner(
@@ -125,6 +132,7 @@ const QrScanner = () => {
             if (document.visibilityState === 'hidden' && isScanning) {
                 console.log("Tab hidden, stopping scanner.");
                 setIsScanning(false);
+                setCheckinSuccess(false);
             }
         };
         document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -135,7 +143,12 @@ const QrScanner = () => {
 
     const toggleScanner = () => {
         setError(null);
+        setCheckinSuccess(false);
         setIsScanning(prev => !prev);
+    };
+
+    const handleGoBack = () => {
+        navigate(-1);
     };
 
     const handleCloseSnackbar = (event, reason) => {
@@ -144,24 +157,38 @@ const QrScanner = () => {
     };
 
     return (
-        <Box sx={{ maxWidth: 500, margin: 'auto', textAlign: 'center' }}>
-            <Typography variant="h5" gutterBottom> Quét mã QR để điểm danh </Typography>
-
+        <Box sx={{ maxWidth: 500, margin: 'auto', textAlign: 'center', padding: 2 }}>
             <Button
-                variant="contained"
-                onClick={toggleScanner}
-                color={isScanning ? "warning" : "primary"}
-                startIcon={isScanning ? <StopCircleIcon /> : <CameraAltIcon />}
-                sx={{ mb: 2 }}
+                variant="outlined"
+                onClick={handleGoBack}
+                startIcon={<ArrowBackIcon />}
+                sx={{ 
+                    mb: 2,
+                    alignSelf: 'flex-start'
+                 }}
             >
-                {isScanning ? 'Tắt Camera' : 'Bật Camera'}
+                Quay lại
             </Button>
+
+            <Typography variant="h5" gutterBottom sx={{ mt: 1 }}> Quét mã QR để điểm danh </Typography>
+
+            {!checkinSuccess && (
+                <Button
+                    variant="contained"
+                    onClick={toggleScanner}
+                    color={isScanning ? "warning" : "primary"}
+                    startIcon={isScanning ? <StopCircleIcon /> : <CameraAltIcon />}
+                    sx={{ mb: 2 }}
+                >
+                    {isScanning ? 'Tắt Camera' : 'Bật Camera'}
+                </Button>
+            )}
 
             <Box
                 id={readerId}
                 sx={{
                     width: '100%',
-                    minHeight: isScanning ? '300px' : '0px',
+                    minHeight: isScanning || checkinSuccess ? '300px' : '0px',
                     border: isScanning ? '1px solid lightgray' : 'none',
                     mb: 2,
                     '& button': { marginTop: '10px' },

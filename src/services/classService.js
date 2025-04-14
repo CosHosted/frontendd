@@ -140,3 +140,18 @@ export const searchStudents = async (query) => {
         return []; 
     }
 };
+
+export const bulkAddStudentsToClass = async (classId, formData) => {
+    try {
+        // Endpoint phải khớp với route backend: /classes/:classId/students/upload
+        const response = await api.post(`/classes/${classId}/students/upload`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data; // Trả về dữ liệu từ backend (message, details, counts)
+    } catch (error) {
+        console.error(`Error bulk adding students to class ${classId}:`, error.response || error);
+        throw error; // Ném lỗi để component xử lý
+    }
+};

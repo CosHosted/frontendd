@@ -21,7 +21,7 @@ export const checkIn = async (qrData) => {
     const response = await api.post('/attendance/check-in', { qrData });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Điểm danh thất bại');
+    throw new Error(error.response?.data?.message || 'Đã điểm danh trước đó');
   }
 };
 
