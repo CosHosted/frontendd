@@ -21,52 +21,7 @@ export const checkIn = async (qrData) => {
     const response = await api.post('/attendance/check-in', { qrData });
     return response.data;
   } catch (error) {
-    const statusCode = error.response?.status;
-    const errorMessage = error.response?.data?.error; // Ưu tiên lấy từ 'error' field theo backend
-
-    if (statusCode === 400 && errorMessage) {
-      // Các lỗi cụ thể từ backend (status 400)
-      if (errorMessage === "qrData là bắt buộc") {
-        throw new Error("Thiếu dữ liệu QR.");
-      }
-      if (errorMessage === "Dữ liệu QR không hợp lệ") {
-        throw new Error("Mã QR không đúng định dạng.");
-      }
-      if (errorMessage === "Mã QR đã hết hạn") {
-        throw new Error("Mã QR đã hết hạn.");
-      }
-      if (errorMessage.startsWith("Chưa đến thời gian điểm danh") || errorMessage.startsWith("Đã hết thời gian điểm danh")) {
-        throw new Error(errorMessage); // Hiển thị lỗi thời gian cụ thể từ backend
-      }
-      if (errorMessage === "Bạn đã điểm danh buổi học này") {
-        throw new Error("Bạn đã điểm danh cho buổi học này rồi.");
-      }
-    }
-
-    if (statusCode === 403 && errorMessage === "Bạn không thuộc lớp này") {
-      throw new Error("Bạn không có trong danh sách lớp học này.");
-    }
-
-    if (statusCode === 404 && errorMessage) {
-      if (errorMessage === "Không tìm thấy thông tin sinh viên") {
-        throw new Error("Không tìm thấy thông tin tài khoản sinh viên của bạn.");
-      }
-      if (errorMessage === "Không tìm thấy lớp học") {
-        throw new Error("Không tìm thấy lớp học được chỉ định trong mã QR.");
-      }
-      if (errorMessage === "Không tìm thấy buổi học") {
-        throw new Error("Không tìm thấy buổi học được chỉ định trong mã QR.");
-      }
-    }
-
-    // Lỗi 500 từ backend hoặc các lỗi không xác định khác
-    if (errorMessage) {
-      // Nếu có lỗi cụ thể từ backend mà chưa được xử lý ở trên
-      throw new Error(errorMessage);
-    } else {
-      // Lỗi mạng hoặc lỗi không có phản hồi
-      throw new Error('Điểm danh thất bại. Vui lòng kiểm tra kết nối và thử lại.');
-    }
+    throw new Error(error.response?.data?.message || 'Đã điểm danh trước đó');
   }
 };
 

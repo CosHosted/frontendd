@@ -73,19 +73,48 @@ const AttendanceHistory = () => {
     }, [fetchHistory]);
 
     return (
-        <Box>
+        <Box
+            sx={{
+                maxWidth: 800,
+                margin: 'auto',
+                textAlign: 'center',
+                padding: 3,
+                borderRadius: 3,
+                boxShadow: 3,
+                bgcolor: 'background.paper'
+            }}
+        >
             <Button
                 startIcon={<ArrowBackIcon />}
                 onClick={() => navigate('/student/dashboard')}
-                sx={{ mb: 2 }}
+                sx={{ 
+                    mb: 3,
+                    display: 'flex',
+                    alignSelf: 'flex-start',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    borderRadius: 2,
+                    '&:hover': {
+                        boxShadow: 2,
+                        transform: 'translateY(-1px)'
+                    }
+                }}
             >
                 Quay lại Dashboard
             </Button>
 
-            <Typography variant="h5" component="h1" gutterBottom>
+            <Typography
+                variant="h5"
+                gutterBottom
+                sx={{ mt: 1, fontWeight: 700, color: 'primary.main' }}
+            >
                 Lịch Sử Điểm Danh
             </Typography>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+
+            <Typography
+                variant="subtitle1"
+                sx={{ mb: 4, textAlign: 'center', color: 'text.secondary' }}
+            >
                 MSSV: {studentInfo.studentId} - Tổng số buổi đã điểm danh: {studentInfo.totalAttendance}
             </Typography>
 
@@ -96,19 +125,19 @@ const AttendanceHistory = () => {
             )}
 
             {error && (
-                <Alert severity="error" sx={{ mt: 2 }}>
+                <Alert severity="error" sx={{ mt: 2, borderRadius: 2, boxShadow: 1 }}>
                     {error}
                 </Alert>
             )}
 
             {!loading && !error && (
-                <TableContainer component={Paper} sx={{ mt: 2 }}>
+                <TableContainer component={Paper} sx={{ mt: 2, borderRadius: 3, boxShadow: 3 }}>
                     <Table>
-                        <TableHead>
+                        <TableHead sx={{ bgcolor: 'primary.light' }}>
                             <TableRow>
-                                <TableCell>Lớp học</TableCell>
-                                <TableCell>Buổi học</TableCell>
-                                <TableCell>Thời gian điểm danh</TableCell>
+                                <TableCell sx={{ color: 'common.white', fontWeight: 600 }}>Lớp học</TableCell>
+                                <TableCell sx={{ color: 'common.white', fontWeight: 600 }}>Buổi học</TableCell>
+                                <TableCell sx={{ color: 'common.white', fontWeight: 600 }}>Thời gian điểm danh</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -120,15 +149,22 @@ const AttendanceHistory = () => {
                                 </TableRow>
                             ) : (
                                 history.map((record, index) => (
-                                    <TableRow key={index}> {/* Nên có key ổn định hơn nếu backend trả về ID */}
+                                    <TableRow
+                                        key={index}
+                                        hover
+                                        sx={{
+                                            transition: 'background-color 0.2s',
+                                            '&:last-child td': { borderBottom: 0 }
+                                        }}
+                                    >
                                         <TableCell>{record.className || 'N/A'}</TableCell>
                                         <TableCell>
                                             {record.schedule ? (
                                                 <Tooltip title={`Ngày ${record.date || 'N/A'}`}>
-                                                     <span>
+                                                    <span>
                                                         {DAYS_OF_WEEK_LABELS[record.schedule.dayOfWeek] || 'N/A'} ({record.schedule.time || 'N/A'})
                                                     </span>
-                                                 </Tooltip>
+                                                </Tooltip>
                                             ) : 'N/A'}
                                         </TableCell>
                                         <TableCell>{formatDateTime(record.checkinTime)}</TableCell>
@@ -143,4 +179,4 @@ const AttendanceHistory = () => {
     );
 };
 
-export default AttendanceHistory; 
+export default AttendanceHistory;

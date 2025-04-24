@@ -6,7 +6,8 @@ import {
     Typography,
     Paper,
     Alert,
-    CircularProgress
+    CircularProgress,
+    Stack
 } from '@mui/material';
 import * as classService from '../../services/classService';
 import { useNavigate } from 'react-router-dom';
@@ -28,12 +29,8 @@ const CreateClass = () => {
             await classService.createClass({ name });
             setSuccess(true);
             setName('');
-            // Chờ 1 giây để hiển thị thông báo thành công trước khi chuyển trang
-            setTimeout(() => {
-                navigate('/teacher/classes');
-            }, 1000);
         } catch (error) {
-            setError(error.message);
+            setError(error.message || 'Đã xảy ra lỗi khi tạo lớp học.');
         } finally {
             setLoading(false);
         }
@@ -47,7 +44,7 @@ const CreateClass = () => {
 
             {success && (
                 <Alert severity="success" sx={{ mb: 2 }}>
-                    Tạo lớp học thành công!
+                    Tạo lớp học thành công! Bạn có thể quay lại bảng điều khiển.
                 </Alert>
             )}
 
@@ -69,7 +66,7 @@ const CreateClass = () => {
                     disabled={loading}
                 />
 
-                <Box sx={{ mt: 3 }}>
+                <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
                     <Button
                         type="submit"
                         variant="contained"
@@ -83,10 +80,18 @@ const CreateClass = () => {
                             'Tạo lớp học'
                         )}
                     </Button>
-                </Box>
+                    <Button
+                        variant="outlined"
+                        fullWidth
+                        sx={{ height: 48 }}
+                        onClick={() => navigate('/teacher')}
+                    >
+                        Quay lại
+                    </Button>
+                </Stack>
             </form>
         </Paper>
     );
 };
 
-export default CreateClass; 
+export default CreateClass;

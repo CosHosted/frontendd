@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
-import Badge from '@mui/icons-material/Badge';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LockIcon from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -75,6 +75,14 @@ const Login = () => {
 
   return (
     <Box className="loginPageContainer">
+      <Box className="loginHeaderContainer">
+        <Typography variant="h3" component="h1" className="loginHeader" sx={{ fontWeight: 'bold', color: '#1e88e5', mb: 2,mr: 6 }}>
+          Hệ thống điểm danh
+        </Typography>
+        <Typography variant="h6" component="h2" className="loginSubHeader" sx={{ color: '#757575' }}>
+          Đăng nhập vào tài khoản của bạn
+        </Typography>
+      </Box>
       <Paper elevation={4} className="loginPaper">
         <Typography variant="h4" component="h1" gutterBottom className="loginTitle">
           Đăng nhập
@@ -91,6 +99,16 @@ const Login = () => {
               value={role}
               onChange={(e) => setRole(e.target.value)}
               label="Vai trò"
+              sx={{
+                    "& .MuiSelect-select": {
+                      color:
+                        role === "admin"
+                          ? "#d32f2f"
+                          : role === "student"
+                          ? "#2e7d32"
+                          : "#ed6c02",
+                    },
+                  }}
             >
               <MenuItem value="student">Sinh viên</MenuItem>
               <MenuItem value="teacher">Giáo viên</MenuItem>
@@ -108,7 +126,7 @@ const Login = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Badge color="action" />
+                  <PersonOutlineIcon color="action" />
                 </InputAdornment>
               ),
             }}
@@ -158,4 +176,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

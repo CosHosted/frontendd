@@ -10,10 +10,10 @@ import {
     TableRow,
     Typography,
     IconButton,
-    Button,
     CircularProgress,
     Alert,
-    TablePagination
+    TablePagination,
+    Tooltip
 } from '@mui/material';
 import { Schedule, Group } from '@mui/icons-material';
 import * as classService from '../../services/classService';
@@ -35,11 +35,9 @@ const ClassList = () => {
     const fetchClasses = async () => {
         try {
             const data = await classService.getTeacherClasses();
-            console.log('Fetched teacher classes:', data); // Debug log
             setClasses(data);
             setError(null);
         } catch (err) {
-            console.error('Error fetching classes:', err); // Debug log
             setError(err.message);
         } finally {
             setLoading(false);
@@ -56,7 +54,6 @@ const ClassList = () => {
     };
 
     const handleScheduleClick = (classId) => {
-        console.log('Navigating to schedules for class:', classId); // Debug log
         navigate(`/teacher/classes/${classId}/schedules`);
     };
 
@@ -77,65 +74,82 @@ const ClassList = () => {
 
     return (
         <Box>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-            <Typography variant="h4" component="h1" className="dashboardTitle">
-                    Bảng điều khiển Giáo viên
-                </Typography>
-                <Typography variant="h5" component="h2">
-                    Danh sách lớp học của tôi
-                </Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate('/teacher/classes/create')}
-                >
-                    Tạo lớp mới
-                </Button>
-            </Box>
-
             {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                     {error}
                 </Alert>
             )}
 
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer>
+            <Paper
+                sx={{
+                    width: '100%',
+                    overflow: 'hidden',
+                    p: 2,
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Thêm shadow
+                    borderRadius: '10px'
+                }}
+            >
+                <TableContainer
+                    sx={{
+                        border: '2px solid #e0e0e0',
+                        borderRadius: '10px',
+                        mt: 2,
+                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' // Thêm shadow
+                    }}
+                >
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Tên lớp</TableCell>
-                                <TableCell>Số sinh viên</TableCell>
-                                <TableCell align="center">Thao tác</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>
+                                    Tên lớp
+                                </TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>
+                                    Số sinh viên
+                                </TableCell>
+                                <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>
+                                    Thao tác
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {paginatedClasses.length === 0 && !loading ? (
                                 <TableRow>
                                     <TableCell colSpan={3} align="center">
-                                        Chưa có lớp học nào hoặc không có lớp học trên trang này.
+                                        <Typography color="text.secondary">
+                                            Chưa có lớp học nào hoặc không có lớp học trên trang này.
+                                        </Typography>
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                paginatedClasses.map((classItem) => (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={classItem.id}>
+                                paginatedClasses.map((classItem, index) => (
+                                    <TableRow
+                                        hover
+                                        role="checkbox"
+                                        tabIndex={-1}
+                                        key={classItem.id}
+                                        sx={{
+                                            backgroundColor: index % 2 === 0 ? '#fafafa' : 'inherit'
+                                        }}
+                                    >
                                         <TableCell>{classItem.name}</TableCell>
                                         <TableCell>{classItem.Students?.length || 0}</TableCell>
                                         <TableCell align="center">
-                                            <IconButton
-                                                color="primary"
-                                                onClick={() => handleScheduleClick(classItem.id)}
-                                                title="Quản lý lịch học"
-                                            >
-                                                <Schedule />
-                                            </IconButton>
-                                            <IconButton
-                                                color="primary"
-                                                onClick={() => handleStudentsClick(classItem.id)}
-                                                title="Quản lý sinh viên"
-                                            >
-                                                <Group />
-                                            </IconButton>
+                                            <Tooltip title="Quản lý lịch học">
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() => handleScheduleClick(classItem.id)}
+                                                >
+                                                    <Schedule />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Quản lý sinh viên">
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() => handleStudentsClick(classItem.id)}
+                                                >
+                                                    <Group />
+                                                </IconButton>
+                                            </Tooltip>
                                         </TableCell>
                                     </TableRow>
                                 ))
@@ -148,7 +162,7 @@ const ClassList = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                
+
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
@@ -158,13 +172,14 @@ const ClassList = () => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                     labelRowsPerPage="Số lớp mỗi trang:"
-                    labelDisplayedRows={({ from, to, count }) => 
+                    labelDisplayedRows={({ from, to, count }) =>
                         `${from}-${to} trên ${count !== -1 ? count : `hơn ${to}`}`
                     }
+                    sx={{ mt: 2 }}
                 />
             </Paper>
         </Box>
     );
 };
 
-export default ClassList; 
+export default ClassList;

@@ -97,6 +97,16 @@ const CreateUser = () => {
                         onChange={handleChange}
                         label="Vai trò"
                         required
+                        sx={{
+                            "& .MuiSelect-select": {
+                                color:
+                                    formData.role === "admin"
+                                        ? "#d32f2f" 
+                                        : formData.role === "student"
+                                        ? "#2e7d32" 
+                                        : "#ed6c02", 
+                            },
+                        }}
                     >
                         <MenuItem value="student">Sinh viên</MenuItem>
                         <MenuItem value="teacher">Giáo viên</MenuItem>
@@ -187,4 +197,4 @@ const CreateUser = () => {
     );
 };
 
-export default CreateUser; 
+export default CreateUser;

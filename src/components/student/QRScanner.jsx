@@ -157,20 +157,44 @@ const QrScanner = () => {
     };
 
     return (
-        <Box sx={{ maxWidth: 500, margin: 'auto', textAlign: 'center', padding: 2 }}>
+        <Box
+            sx={{
+                maxWidth: 500,
+                margin: 'auto',
+                textAlign: 'center',
+                padding: 3,
+                borderRadius: 3,
+                boxShadow: 3,
+                bgcolor: 'background.paper'
+            }}
+        >
             <Button
                 variant="outlined"
                 onClick={handleGoBack}
                 startIcon={<ArrowBackIcon />}
                 sx={{ 
-                    mb: 2,
-                    alignSelf: 'flex-start'
+                    mb: 3,
+                    display: 'flex',
+                    alignSelf: 'flex-start',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    borderRadius: 2,
+                    '&:hover': {
+                        boxShadow: 2,
+                        transform: 'translateY(-1px)'
+                    }
                  }}
             >
                 Quay lại
             </Button>
 
-            <Typography variant="h5" gutterBottom sx={{ mt: 1 }}> Quét mã QR để điểm danh </Typography>
+            <Typography
+                variant="h5"
+                gutterBottom
+                sx={{ mt: 1, fontWeight: 700, color: 'primary.main' }}
+            >
+                Quét mã QR để điểm danh
+            </Typography>
 
             {!checkinSuccess && (
                 <Button
@@ -178,7 +202,20 @@ const QrScanner = () => {
                     onClick={toggleScanner}
                     color={isScanning ? "warning" : "primary"}
                     startIcon={isScanning ? <StopCircleIcon /> : <CameraAltIcon />}
-                    sx={{ mb: 2 }}
+                    sx={{
+                        mb: 2,
+                        py: 1.5,
+                        px: 4,
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        borderRadius: 2,
+                        boxShadow: 3,
+                        '&:hover': {
+                            boxShadow: 4,
+                            transform: 'translateY(-2px)'
+                        }
+                    }}
                 >
                     {isScanning ? 'Tắt Camera' : 'Bật Camera'}
                 </Button>
@@ -190,14 +227,22 @@ const QrScanner = () => {
                     width: '100%',
                     minHeight: isScanning || checkinSuccess ? '300px' : '0px',
                     border: isScanning ? '1px solid lightgray' : 'none',
-                    mb: 2,
+                    borderRadius: 2,
+                    mb: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    bgcolor: isScanning ? 'background.default' : 'transparent',
+                    boxShadow: isScanning ? 2 : 'none',
+                    flexDirection: 'column',
                     '& button': { marginTop: '10px' },
-                     '& #html5-qrcode-anchor-scan-type-change': { display: 'none' }
+                    '& #html5-qrcode-anchor-scan-type-change': { display: 'none' },
+                    '& #html5-qrcode-camera-selection': { marginTop: '10px' } 
                 }}
             />
 
             {error && (
-                <Alert severity="error" sx={{ mt: 2 }}>
+                <Alert severity="error" sx={{ mt: 2, borderRadius: 2, boxShadow: 1 }}>
                     {error}
                 </Alert>
             )}
@@ -208,7 +253,16 @@ const QrScanner = () => {
                 onClose={handleCloseSnackbar}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbar.severity}
+                    sx={{
+                        width: '100%',
+                        borderRadius: 2,
+                        boxShadow: 2,
+                        fontWeight: 500
+                    }}
+                >
                     {snackbar.message}
                 </Alert>
             </Snackbar>

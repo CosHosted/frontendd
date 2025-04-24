@@ -1,78 +1,118 @@
 import { useState } from 'react';
-// Import CSS mới
-import './TeacherDashboard.css'; 
-
+import './TeacherDashboard.css';
 import {
     Box,
     Container,
     Typography,
     Paper,
-    Tabs,
-    Tab,
+    List,
+    ListItemButton,
+    ListItemText,
+    Stack,
+    CssBaseline,
+    Button,
     Divider
 } from '@mui/material';
-
-import CreateClass from '../../components/teacher/CreateClass';
 import ClassList from '../../components/teacher/ClassList';
-// Có thể cần import component Báo cáo điểm danh sau này
-// import AttendanceReport from '../../components/teacher/AttendanceReport'; 
+import CreateClass from '../../components/teacher/CreateClass';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AddIcon from '@mui/icons-material/Add';
 
 const TeacherDashboard = () => {
-    const [currentTab, setCurrentTab] = useState(0); // Bắt đầu với tab Danh sách lớp học
+    const [currentSection, setCurrentSection] = useState('manageClasses');
 
-    const handleTabChange = (event, newValue) => {
-        setCurrentTab(newValue);
+    const renderContent = () => {
+        switch (currentSection) {
+            case 'createClass':
+                return (
+                    <>
+                        <CreateClass />
+                        <Divider sx={{ my: 4 }} />
+                    </>
+                );
+            case 'manageClasses':
+                return (
+                    <Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                                Danh sách lớp học
+                            </Typography>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AddIcon />}
+                                onClick={() => setCurrentSection('createClass')}
+                            >
+                                Tạo lớp mới
+                            </Button>
+                        </Box>
+                        <ClassList />
+                    </Box>
+                );
+            case 'attendanceReports':
+                return (
+                    <Box>
+                        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+                            Báo cáo điểm danh
+                        </Typography>
+                        <Typography color="text.secondary">
+                            Tính năng đang được phát triển...
+                        </Typography>
+                    </Box>
+                );
+            default:
+                return null;
+        }
     };
 
+    const menuItems = [
+        { label: '📚 Danh sách lớp học', section: 'manageClasses' },
+        { label: '📊 Báo cáo điểm danh', section: 'attendanceReports' }
+    ];
+
     return (
-        // Thêm className vào Container, xóa sx mt, mb (đã có trong CSS)
-        <Container maxWidth="lg" className="teacherDashboardContainer">
-            {/* Thêm className vào Paper, xóa sx p */}
-            <Paper elevation={0} /* Tắt elevation mặc định vì dùng box-shadow CSS */ className="teacherDashboardPaper">
-                {/* Thêm className vào Typography, xóa sx gutterBottom */}
-                <Typography variant="h4" component="h1" className="dashboardTitle">
-                    Bảng điều khiển Giáo viên
-                </Typography>
-                
-                {/* Thêm className vào Box chứa Tabs, xóa sx borderBottom, mb */}
-                <Box className="tabsContainer">
-                    <Tabs 
-                        value={currentTab} 
-                        onChange={handleTabChange}
-                        aria-label="teacher dashboard tabs"
-                        className="teacherDashboardTabs" // Class cho Tabs
-                    >
-                        {/* Thêm className cho từng Tab */}
-                        <Tab label="Danh sách lớp học" className="teacherDashboardTab" />
-                        <Tab label="Tạo lớp mới" className="teacherDashboardTab" />
-                        {/* <Tab label="Tạo buổi học" /> Xóa tab này */}
-                        
-                    </Tabs>
-                </Box>
+        <Container maxWidth="xl" className="teacherDashboardContainer">
+     
+            <Typography variant="h4" className="dashboardTitle" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                Bảng điều khiển giáo viên
+            </Typography>
+            <Typography variant="body1" className="dashboardSubtitle" sx={{ mb: 4, color: 'text.secondary' }}>
+                Quản lý lớp học và điểm danh sinh viên  
+            </Typography>
+            <CssBaseline />
+            <Stack direction="row" className="sidebarContainer">
+                {/* Sidebar Navigation */}
+                <Paper className="sidebar">
+                    <Typography variant="h6" sx={{ p: 2, fontWeight: 700, color: 'primary.main' }}>
+                        Bảng điều khiển
+                    </Typography>
+                    <List component="nav">
+                        {menuItems.map((item) => (
+                            <ListItemButton
+                                key={item.section}
+                                selected={currentSection === item.section}
+                                onClick={() => setCurrentSection(item.section)}
+                                className={`sidebarItem ${currentSection === item.section ? 'active' : ''}`}
+                            >
+                                <ListItemText
+                                    primary={item.label}
+                                    primaryTypographyProps={{
+                                        variant: 'body1',
+                                        fontWeight: currentSection === item.section ? 600 : 500
+                                    }}
+                                />
+                            </ListItemButton>
+                        ))}
+                    </List>
+                </Paper>
 
-                {/* Thêm className cho Divider, xóa sx mb */}
-                <Divider className="dashboardDivider" />
-
-                {/* Vùng nội dung Tab */}
-                <Box className="tabContent">
-                    {currentTab === 0 && (
-                        <ClassList />
-                    )}
-
-                    {currentTab === 1 && (
-                        <CreateClass />
-                    )}
-
-                    {/* Xóa phần render cho tab đã xóa */}
-                    {/* {currentTab === 2 && (
-                        <CreateSchedule />
-                    )} */}
-
-                    
-                </Box>
-            </Paper>
+                {/* Main Content Area */}
+                <Paper className="contentArea">
+                    {renderContent()}
+                </Paper>
+            </Stack>
         </Container>
     );
 };
 
-export default TeacherDashboard; 
+export default TeacherDashboard;

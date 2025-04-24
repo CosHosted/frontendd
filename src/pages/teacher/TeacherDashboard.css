@@ -1,61 +1,67 @@
-/* DiemDanhSV-master/src/pages/teacher/TeacherDashboard.css */
-
 .teacherDashboardContainer {
-  /* Có thể thêm background nhẹ nhàng cho toàn trang nếu MainLayout chưa có */
-  /* background-color: #f9f9f9; */
-  padding-top: 2rem; /* Thêm khoảng cách trên */
-  padding-bottom: 2rem; /* Thêm khoảng cách dưới */
+  height: 100vh;
+  padding: 20px;
+  background-color: #f8f9fa;
 }
 
-.teacherDashboardPaper {
-  padding: 1.5rem 2rem; /* Padding đồng đều hơn */
-  border-radius: 12px; /* Bo góc mềm mại */
+.sidebarContainer {
+  height: calc(100vh - 40px);
+  gap: 20px;
+}
+
+.sidebar {
+  width: 280px;
+  border-radius: 12px;
+  padding: 16px 0;
   background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Bóng đổ nhẹ nhàng */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: width 0.3s ease;
 }
 
-.dashboardTitle {
-  margin-bottom: 1.5rem; /* Khoảng cách dưới tiêu đề */
-  font-weight: 600;
-  color: #1a237e; /* Màu xanh đậm hơn */
+.sidebarItem {
+  margin: 4px 12px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: #4a4a4a;
+  transition: all 0.2s ease;
 }
 
-.tabsContainer {
-  margin-bottom: 1.5rem;
+.sidebarItem:hover {
+  background-color: rgba(26, 35, 126, 0.05);
+  transform: translateX(4px);
 }
 
-/* Tùy chỉnh Tabs của MUI */
-.teacherDashboardTabs .MuiTabs-indicator {
-  background-color: #1a237e; /* Màu indicator khớp với tiêu đề */
-  height: 3px;
+.sidebarItem.active {
+  background-color: #1a237e;
+  color: hsl(195, 100%, 30%) !important;
+  box-shadow: 0 2px 8px rgba(26, 35, 126, 0.3);
 }
 
-/* Tùy chỉnh Tab của MUI */
-.teacherDashboardTab {
-  text-transform: none; /* Không viết hoa chữ cái đầu */
-  font-weight: 500;
-  font-size: 1rem;
-  opacity: 0.7;
-  transition: all 0.2s ease-in-out;
+.contentArea {
+  flex: 1;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+  padding: 24px;
 }
 
-.teacherDashboardTab.Mui-selected {
-  color: #1a237e !important; /* Màu chữ khi chọn tab */
-  opacity: 1;
-  font-weight: 600;
-}
-
-.teacherDashboardTab:hover {
-  background-color: rgba(26, 35, 126, 0.04); /* Hiệu ứng hover nhẹ */
-  opacity: 1;
-}
-
-.dashboardDivider {
-  margin-bottom: 1.5rem; /* Khoảng cách dưới đường kẻ */
-  border-color: rgba(0, 0, 0, 0.08); /* Màu đường kẻ nhạt hơn */
-}
-
-.tabContent {
-  /* Thêm style cho nội dung tab nếu cần */
-  min-height: 300px; /* Chiều cao tối thiểu để tránh nhảy trang */
+@media (max-width: 768px) {
+  .sidebarContainer {
+      flex-direction: column;
+      height: auto;
+  }
+  
+  .sidebar {
+      width: 100%;
+      margin-bottom: 16px;
+  }
+  
+  .contentArea {
+      min-height: 70vh;
+  }
+  
+  .teacherDashboardContainer {
+      padding: 16px;
+  }
 }

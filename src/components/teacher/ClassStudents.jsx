@@ -18,11 +18,13 @@ import {
   Autocomplete,
   Snackbar,
   Input,
-  Divider,
+  Tabs,
+  Tab,
   TablePagination,
 } from "@mui/material";
-
-import { Delete, UploadFile } from "@mui/icons-material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Delete, UploadFile, Group, AddCircleOutline, Search } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import * as classService from "../../services/classService";
 import useDebounce from "../../hooks/useDebounce"; // hook debounce
 
@@ -50,11 +52,34 @@ const ClassStudents = () => {
   const [isUploadingBulk, setIsUploadingBulk] = useState(false); // Loading cho upload file
   const [bulkUploadError, setBulkUploadError] = useState(null); // Lỗi riêng cho upload
 
-  // State cho phân trang
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const debouncedSearchTerm = useDebounce(searchTerm, 500); // Debounce 500ms
+
+  const [currentTab, setCurrentTab] = useState(0); // State for tab navigation
+
+  const handleTabChange = (event, newValue) => {
+    setCurrentTab(newValue);
+  };
+
+  // Pagination state
+  const [page, setPage] = useState(0); // Current page
+  const [rowsPerPage, setRowsPerPage] = useState(5); // Rows per page
+
+  // Calculate the sliced data for the current page
+  const paginatedStudents = students.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  // Handle page change
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  // Handle rows per page change
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to the first page
+  };
 
   // Hàm fetch danh sách sinh viên của lớp
   const fetchStudents = useCallback(async () => {
@@ -257,17 +282,6 @@ const ClassStudents = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  // Hàm xử lý thay đổi trang
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  // Hàm xử lý thay đổi số dòng mỗi trang
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset về trang đầu tiên khi thay đổi số dòng
-  };
-
   if (!classId) {
     return (
       <Box>
@@ -286,202 +300,390 @@ const ClassStudents = () => {
   }
 
   return (
-    <Box>
-      <Typography variant="h5" component="h2" mb={2}>
-        Quản lý sinh viên lớp (ID: {classId})
-      </Typography>
-      <Button
-        variant="outlined"
-        onClick={() => navigate("/teacher/classes")}
-        sx={{ mt: 3 }}
+    <Box sx={{ p: 3, maxWidth: 1200, mx: "auto" }}>
+      {/* Header */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 4,
+          p: 3,
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 3,
+        }}
       >
-        Quay lại danh sách lớp
-      </Button>
-      {error && !bulkUploadError && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
-
-      {/* Phần thêm sinh viên hàng loạt bằng file */}
-      <Paper sx={{ p: 2, mb: 3 }}>
-        <Typography variant="h6" mb={1}>
-          Thêm sinh viên hàng loạt (Excel/CSV)
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 700,
+            color: "primary.main",
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Group sx={{ fontSize: 40 }} /> Quản lý Sinh viên - Lớp ID: {classId}
         </Typography>
-        {/* Hiển thị lỗi riêng của upload file */}
-        {bulkUploadError && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {bulkUploadError}
-          </Alert>
-        )}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
-          <Button
-            variant="outlined"
-            component="label"
-            startIcon={<UploadFile />}
-            disabled={isUploadingBulk}
-          >
-            Chọn File MSSV
-            <Input
-              type="file"
-              id="bulk-student-upload-input"
-              hidden
-              onChange={handleBulkFileChange}
-              accept=".xlsx, .xls, .csv"
-            />
-          </Button>
-          {selectedBulkFile && (
-            <Typography variant="body2" sx={{ fontStyle: "italic" }}>
-              {selectedBulkFile.name}
-            </Typography>
-          )}
-        </Box>
+
         <Button
           variant="contained"
-          onClick={handleBulkUpload}
-          disabled={!selectedBulkFile || isUploadingBulk}
-          startIcon={
-            isUploadingBulk ? (
-              <CircularProgress size={20} color="inherit" />
-            ) : null
-          }
+          onClick={() => navigate("/teacher")}
+          sx={{
+            px: 4,
+            borderRadius: 2,
+            textTransform: "none",
+            boxShadow: 3,
+            "&:hover": {
+              boxShadow: 4,
+              transform: "translateY(-2px)",
+            },
+          }}
         >
-          {isUploadingBulk ? "Đang xử lý..." : "Thêm vào lớp"}
+          <ArrowBackIcon sx={{ mr: 1 }} />
+          Quay lại
         </Button>
-      </Paper>
+      </Box>
 
-      <Divider sx={{ my: 3 }} />
-      {/* Phần tìm kiếm và thêm sinh viên */}
-      <Paper sx={{ p: 2, mb: 3 }}>
-        <Typography variant="h6" mb={1}>
-          Thêm sinh viên vào lớp
-        </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Autocomplete
-            sx={{ flexGrow: 1 }}
-            options={searchResults}
-            getOptionLabel={(option) =>
-              `${option.name} (${option.studentId || "N/A"})`
-            } // Hiển thị tên và mã SV
-            filterOptions={(x) => x} // Disable built-in filtering
-            value={selectedStudent}
-            onChange={handleStudentSelect}
-            inputValue={searchTerm}
-            onInputChange={handleSearchInputChange}
-            loading={isSearching}
-            loadingText="Đang tìm..."
-            noOptionsText={
-              searchTerm ? "Không tìm thấy sinh viên" : "Gõ để tìm kiếm"
-            }
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Tìm kiếm sinh viên (theo tên hoặc MSSV)"
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {isSearching ? (
-                        <CircularProgress color="inherit" size={20} />
-                      ) : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-              />
-            )}
+      <Paper
+        sx={{
+          mb: 3,
+          borderRadius: 3,
+          boxShadow: 3,
+        }}
+      >
+        <Tabs
+          value={currentTab}
+          onChange={handleTabChange}
+          variant="fullWidth"
+          sx={{
+            "& .MuiTabs-indicator": {
+              height: 4,
+              borderRadius: 2,
+            },
+          }}
+        >
+          <Tab
+            label="Danh sách sinh viên"
+            sx={{
+              fontSize: "1rem",
+              fontWeight: 600,
+              textTransform: "none",
+            }}
           />
-          <Button
-            variant="contained"
-            onClick={handleAddSingleStudent}
-            disabled={!selectedStudent || isAdding || loading}
-          >
-            {isAdding ? <CircularProgress size={24} /> : "Thêm"}
-          </Button>
-        </Box>
+          <Tab
+            label="Quản lý thêm sinh viên"
+            sx={{
+              fontSize: "1rem",
+              fontWeight: 600,
+              textTransform: "none",
+            }}
+          />
+        </Tabs>
       </Paper>
 
-      {/* Bảng danh sách sinh viên hiện có */}
-      <Typography variant="h6" mb={1}>
-        Danh sách sinh viên trong lớp
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>MSSV</TableCell>
-              <TableCell>Tên sinh viên</TableCell>
-              <TableCell align="center">Thao tác</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={3} align="center">
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            ) : students.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={3} align="center">
-                  Lớp học chưa có sinh viên nào.
-                </TableCell>
-              </TableRow>
-            ) : (
-              students
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Phân trang dữ liệu
-                .map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>{student.studentId || "N/A"}</TableCell>
-                  <TableCell>{student.name}</TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      color="error"
-                      onClick={() =>
-                        handleRemoveStudent(student.id, student.name)
-                      }
-                      disabled={loading}
-                      title="Xóa khỏi lớp"
-                    >
-                      <Delete />
-                    </IconButton>
+      {currentTab === 0 && (
+        <Paper
+          sx={{
+            borderRadius: 3,
+            overflow: "hidden",
+            boxShadow: 3,
+            position: "relative",
+          }}
+        >
+          <TableContainer>
+            <Typography
+              variant="h6"
+              sx={{
+                p: 2,
+                fontWeight: 600,
+                textAlign: "center",
+                position: "sticky",
+                top: 0,
+                zIndex: 1,
+              }}
+              >
+            Sĩ số: {students.length}
+            </Typography>
+            <Table>
+              <TableHead sx={{ bgcolor: "primary.light" }}>
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      color: "common.white",
+                      fontSize: "1.1rem",
+                      py: 3,
+                      fontWeight: 600,
+                    }}
+                  >
+                    MSSV
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: "common.white",
+                      fontSize: "1.1rem",
+                      py: 3,
+                      fontWeight: 600,
+                    }}
+                  >
+                    Tên sinh viên
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "common.white",
+                      fontSize: "1.1rem",
+                      py: 3,
+                      fontWeight: 600,
+                    }}
+                  >
+                    Thao tác
                   </TableCell>
                 </TableRow>
-              ))
+              </TableHead>
+
+              <TableBody>
+                {paginatedStudents.map((student) => (
+                  <TableRow
+                    key={student.id}
+                    hover
+                    sx={{
+                      transition: "background-color 0.2s",
+                      "&:last-child td": { borderBottom: 0 },
+                    }}
+                  >
+                    <TableCell sx={{ py: 2.5, fontWeight: 500 }}>
+                      {student.studentId || "N/A"}
+                    </TableCell>
+                    <TableCell sx={{ py: 2.5 }}>{student.name}</TableCell>
+                    <TableCell align="center" sx={{ py: 2.5 }}>
+                      <IconButton
+                        onClick={() =>
+                          handleRemoveStudent(student.id, student.name)
+                        }
+                        sx={{
+                          color: "error.main",
+                          "&:hover": {
+                            bgcolor: "error.light",
+                            transform: "scale(1.1)",
+                          },
+                        }}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+               <TablePagination
+                                rowsPerPageOptions={[5, 10, 25]}
+                                component="div"
+                                count={students.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                labelRowsPerPage="Số lớp mỗi trang:"
+                                labelDisplayedRows={({ from, to, count }) =>
+                                    `${from}-${to} trên ${count !== -1 ? count : `hơn ${to}`}`
+                                }
+                                sx={{ mt: 2 }}
+                            />
+          </TableContainer>
+
+          {loading && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                bgcolor: "rgba(255, 255, 255, 0.7)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <CircularProgress size={60} thickness={4} />
+            </Box>
+          )}
+        </Paper>
+      )}
+
+      {currentTab === 1 && (
+        <>
+          {/* Phần thêm thủ công */}
+          <Paper sx={{ p: 3, mb: 3, borderRadius: 3, boxShadow: 3 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                mb: 2,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                color: "text.primary",
+              }}
+            >
+              <AddCircleOutline color="primary" /> Thêm sinh viên thủ công
+            </Typography>
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Autocomplete
+                sx={{ flexGrow: 1 }}
+                options={searchResults}
+                getOptionLabel={(option) =>
+                  `${option.name} (${option.studentId || "N/A"})`
+                } // Hiển thị tên và mã SV
+                filterOptions={(x) => x} // Disable built-in filtering
+                value={selectedStudent}
+                onChange={handleStudentSelect}
+                inputValue={searchTerm}
+                onInputChange={handleSearchInputChange}
+                loading={isSearching}
+                loadingText="Đang tìm..."
+                noOptionsText={
+                  searchTerm ? "Không tìm thấy sinh viên" : "Gõ để tìm kiếm"
+                }
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Tìm kiếm sinh viên (theo tên hoặc MSSV)"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {isSearching ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+              <Button
+                variant="contained"
+                onClick={handleAddSingleStudent}
+                disabled={!selectedStudent || isAdding || loading}
+              >
+                {isAdding ? <CircularProgress size={24} /> : "Thêm"}
+              </Button>
+            </Box>
+          </Paper>
+          {/* Phần thêm sinh viên hàng loạt */}
+          <Paper
+            sx={{
+              p: 3,
+              mb: 3,
+              borderRadius: 3,
+              boxShadow: 3,
+              bgcolor: "background.default",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                mb: 2,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                color: "text.primary",
+              }}
+            >
+              <UploadFile color="primary" /> Thêm từ file Excel/CSV
+            </Typography>
+
+            {bulkUploadError && (
+              <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
+                {bulkUploadError}
+              </Alert>
             )}
-          </TableBody>
-        </Table>
-      </TableContainer>
 
-      {/* Component phân trang */}
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25, 50]} // Các tùy chọn số dòng/trang
-        component="div"
-        count={students.length} // Tổng số sinh viên
-        rowsPerPage={rowsPerPage} // Số dòng hiện tại/trang
-        page={page} // Trang hiện tại (bắt đầu từ 0)
-        onPageChange={handleChangePage} // Callback khi đổi trang
-        onRowsPerPageChange={handleChangeRowsPerPage} // Callback khi đổi số dòng/trang
-        labelRowsPerPage="Số sinh viên mỗi trang:"
-        labelDisplayedRows={({ from, to, count }) =>
-          `${from}-${to} trên ${count !== -1 ? count : `hơn ${to}`}`
-        }
-      />
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Button
+                variant="outlined"
+                component="label"
+                startIcon={<UploadFile />}
+                sx={{
+                  textTransform: "none",
+                  borderWidth: 2,
+                  "&:hover": { borderWidth: 2 },
+                }}
+              >
+                Chọn file
+                <Input
+                  type="file"
+                  hidden
+                  onChange={handleBulkFileChange}
+                  accept=".xlsx, .xls, .csv"
+                />
+              </Button>
 
-      {/* Snackbar để hiển thị thông báo */}
+              {selectedBulkFile && (
+                <Typography
+                  variant="body2"
+                  sx={{ fontStyle: "italic", color: "text.secondary" }}
+                >
+                  📄 {selectedBulkFile.name}
+                </Typography>
+              )}
+            </Box>
+
+            <Button
+              variant="contained"
+              onClick={handleBulkUpload}
+              disabled={!selectedBulkFile || isUploadingBulk}
+              sx={{
+                mt: 2,
+                px: 4,
+                borderRadius: 2,
+                textTransform: "none",
+              }}
+            >
+              {isUploadingBulk ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Tải lên"
+              )}
+            </Button>
+          </Paper>
+        </>
+      )}
+
+      {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={6000}
+        autoHideDuration={4500}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
-          onClose={handleCloseSnackbar}
           severity={snackbar.severity}
-          sx={{ width: "100%" }}
+          sx={{
+            boxShadow: 3,
+            borderRadius: 2,
+            minWidth: 300,
+            alignItems: "center",
+          }}
+          action={
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleCloseSnackbar}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          }
         >
-          {snackbar.message}
+          <Typography variant="body1" fontWeight={500}>
+            {snackbar.message}
+          </Typography>
         </Alert>
       </Snackbar>
     </Box>

@@ -1,6 +1,6 @@
 const config = {
-  API_URL: 'https://dayladiemdanh-production.up.railway.app/api',
-  REFRESH_TOKEN_URL: 'https://dayladiemdanh-production.up.railway.app/api/auth/refresh-token'
+  API_URL: 'http://localhost:5000/api',
+  REFRESH_TOKEN_URL: 'http://localhost:5000/api/auth/refresh-token'
 };
 //Neu dung bien env
 // const config = {
